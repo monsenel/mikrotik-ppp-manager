@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  mikrotik-ppp-api:
+    build:
+      context: ./backend/MikroTikPppManager.Api
+      dockerfile: Dockerfile
+    container_name: mikrotik-ppp-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MikroTik__RouterDisplayName=${MIKROTIK_DISPLAY_NAME:-Core-BNG-CCR2116-01}
+      - MikroTik__Host=${MIKROTIK_HOST:-192.168.88.1}
+      - MikroTik__Port=${MIKROTIK_PORT:-8729}
+      - MikroTik__Username=${MIKROTIK_USER:-ppp-api-admin}
+      - MikroTik__Password=${MIKROTIK_PASSWORD:-}
+      - MikroTik__TlsEnabled=${MIKROTIK_TLS:-true}
+      - MikroTik__ValidateCertificate=${MIKROTIK_VALIDATE_CERT:-true}
+      - MikroTik__TimeoutMs=${MIKROTIK_TIMEOUT_MS:-8000}
+    ports:
+      - "8080:8080"
+
+  mikrotik-ppp-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mikrotik-ppp-web
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - MIKROTIK_DISPLAY_NAME=${MIKROTIK_DISPLAY_NAME:-Core-BNG-CCR2116-01}
+      - MIKROTIK_HOST=${MIKROTIK_HOST:-192.168.88.1}
+      - MIKROTIK_PORT=${MIKROTIK_PORT:-8729}
+      - MIKROTIK_USER=${MIKROTIK_USER:-ppp-api-admin}
+      - MIKROTIK_PASSWORD=${MIKROTIK_PASSWORD:-}
+      - MIKROTIK_TLS=${MIKROTIK_TLS:-true}
+      - MIKROTIK_VALIDATE_CERT=${MIKROTIK_VALIDATE_CERT:-true}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mikrotik-ppp-api

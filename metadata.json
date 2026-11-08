@@ -1,0 +1,6 @@
+{
+  "name": "MikroTik PPP Manager",
+  "description": "Production-grade web administration console for managing MikroTik RouterOS PPP secrets, profiles, and active sessions via the native RouterOS API over TLS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
